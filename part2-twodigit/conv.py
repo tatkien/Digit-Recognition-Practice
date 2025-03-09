@@ -19,12 +19,24 @@ class CNN(nn.Module):
 
     def __init__(self, input_dimension):
         super(CNN, self).__init__()
-        # TODO initialize model layers here
+        self.model = nn.Sequential( #Input: 1x42x28
+            nn.Conv2d(1, 32, (3, 3)), # 32x40x26
+            nn.ReLU(),
+            nn.MaxPool2d((2, 2)), # 32x20x13
+            nn.Conv2d(32,64, (3, 3)), # 64x18x11
+            nn.ReLU(),
+            nn.MaxPool2d((2, 2)), # 64x9x5
+            Flatten(), # = 2880
+            nn.Dropout(0.5), # Randomly zero out half of the elements of the input tensor
+            nn.Linear(2880, 128),
+        )
+        self.fc1 = nn.Linear(128, num_classes)
+        self.fc2 = nn.Linear(128, num_classes)
 
     def forward(self, x):
-
-        # TODO use model layers to predict the two digits
-
+        xf = self.model(x)
+        out_first_digit = self.fc1(xf)
+        out_second_digit = self.fc2(xf)
         return out_first_digit, out_second_digit
 
 def main():
@@ -58,6 +70,7 @@ def main():
     loss, acc = run_epoch(test_batches, model.eval(), None)
     print('Test loss1: {:.6f}  accuracy1: {:.6f}  loss2: {:.6f}   accuracy2: {:.6f}'.format(loss[0], acc[0], loss[1], acc[1]))
 
+    print('Validation accuracy: {}'.format(run_epoch(dev_batches, model.eval(), None)[1]))
 if __name__ == '__main__':
     # Specify seed for deterministic behavior, then shuffle. Do not change seed for official submissions to edx
     np.random.seed(12321)  # for reproducibility

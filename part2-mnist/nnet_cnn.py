@@ -42,10 +42,17 @@ def main():
 
     #################################
     ## Model specification TODO
-    model = nn.Sequential(
-              nn.Conv2d(1, 32, (3, 3)),
-              nn.ReLU(),
-              nn.MaxPool2d((2, 2)),
+    model = nn.Sequential( # Input: 1x28x28
+                nn.Conv2d(1, 32, (3, 3)), # 32x26x26
+                nn.ReLU(),
+                nn.MaxPool2d((2, 2)), # 32x13x13
+                nn.Conv2d(32,64, (3, 3)), # 64x11x11
+                nn.ReLU(),
+                nn.MaxPool2d((2, 2)), # 64x5x5
+                nn.Flatten(), # = 1600
+                nn.Linear(1600, 128),
+                nn.Dropout(0.5), # Randomly zero out half of the elements of the input tensor
+                nn.Linear(128, 10),
             )
     ##################################
 

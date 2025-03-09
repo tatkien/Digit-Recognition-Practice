@@ -39,7 +39,8 @@ def train_model(train_data, dev_data, model, lr=0.01, momentum=0.9, nesterov=Fal
     """Train a model for N epochs given data and hyper-params."""
     # We optimize with SGD
     optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=momentum, nesterov=nesterov)
-
+    # Try with different optimizers and parameters
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001, betas=(0.9, 0.999), eps=1e-08, weight_decay=0, amsgrad=False)
     for epoch in range(1, n_epochs + 1):
         print("-------------\nEpoch {}:\n".format(epoch))
 
